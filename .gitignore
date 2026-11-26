@@ -10,3 +10,6 @@ runs/
 *.safetensors
 .venv/
 __pycache__/
+
+corpus/grok-quarantine-v1/
+corpus/grok-batches-v2/
