@@ -40,6 +40,9 @@ class ExpertBank(nn.Module):
             MicroExpert(hidden_size, config.expert_intermediate)
             for _ in range(config.num_experts)
         )
+        # Trainer-set override (k-sampling during training); None = use
+        # the caller's top_k or the config default.
+        self.force_top_k: int | None = None
 
     def _effective_k(self, probs: torch.Tensor, top_k: int, full_court: bool) -> torch.Tensor:
         """Per-token k: full court forces max; otherwise widen when unsure."""
@@ -63,6 +66,8 @@ class ExpertBank(nn.Module):
     def forward(self, z: torch.Tensor, top_k: int | None = None,
                 full_court: bool = False):
         cfg = self.config
+        if top_k is None:
+            top_k = self.force_top_k
         k_req = cfg.top_k if top_k is None else top_k
         probs = F.softmax(self.router(z), dim=-1)
         ks = self._effective_k(probs, k_req, full_court)

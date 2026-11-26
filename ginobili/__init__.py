@@ -10,7 +10,9 @@ Ginobili v1 (architecture lock, 2026-11-26):
 """
 from .config import GinobiliConfig
 from .experts import MicroExpert, ExpertBank, routing_supervision_loss, load_balance_loss
-from .graft import GraftedMLP, graft_model, count_parameters
+from .graft import GraftedMLP, graft_model, count_parameters, iter_banks, set_top_k
+from .data import EXPERTS, load_corpus, GinobiliDataset, collate
+from .train import train_steps, expert_weight_movement
 
 __all__ = [
     "GinobiliConfig",
@@ -21,4 +23,12 @@ __all__ = [
     "GraftedMLP",
     "graft_model",
     "count_parameters",
+    "iter_banks",
+    "set_top_k",
+    "EXPERTS",
+    "load_corpus",
+    "GinobiliDataset",
+    "collate",
+    "train_steps",
+    "expert_weight_movement",
 ]

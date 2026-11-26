@@ -43,6 +43,20 @@ def graft_model(model: nn.Module, config: GinobiliConfig | None = None) -> nn.Mo
     return model
 
 
+def iter_banks(model: nn.Module):
+    """Yield (layer_index, ExpertBank) for every grafted layer, in order."""
+    core = model.model if hasattr(model, "model") else model
+    for i, layer in enumerate(core.layers):
+        if isinstance(layer.mlp, GraftedMLP):
+            yield i, layer.mlp.bank
+
+
+def set_top_k(model: nn.Module, k: int | None) -> None:
+    """Set the trainer's per-step k override on every bank (None clears)."""
+    for _, bank in iter_banks(model):
+        bank.force_top_k = k
+
+
 def count_parameters(model: nn.Module) -> dict:
     total = sum(p.numel() for p in model.parameters())
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
