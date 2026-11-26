@@ -8,3 +8,5 @@ corpus/*.jsonl
 runs/
 *.gguf
 *.safetensors
+.venv/
+__pycache__/
